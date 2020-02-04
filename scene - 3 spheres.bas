@@ -71,7 +71,7 @@ sub Main
   sphere_as_ground sce0, hsv(0,0,.8), .3, .5
   
   var hue = 0, k = 1/25, fres = 0f, refr_amt = 0f, ior = 1f
-  k = 1/25
+  k = 1/100
   mat.quick_solid hsv(0,0, .8), k, fres, refr_amt
   sce0.pobjects->obj(sce0.pobjects->ub_obj).desc.mat_layer sce0.add_material(mat.refl, mat.refr, mat.em, ior), .5 ''layer strength
   
