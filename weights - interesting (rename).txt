@@ -1,0 +1,15 @@
+"srate",0.198775
+"qrate",0.015
+"imap fi",0.5039657
+"imap sus",0.9218226
+"imap star filter",0.1426991
+"blur star filter",0.1426991
+"blur fi",0.140121
+"blur f0",0.6868357
+"grid fi",1.7845
+"ipix trig",12
+"ipix trig mul",374.40553
+"ipix trig exp",0.567891
+"qexp",0.03234462
+"blur thresh",0.4337972
+"blur exp",0.005157093
