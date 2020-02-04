@@ -70,6 +70,11 @@ sub Main
   '                                    k, fresnel
   sphere_as_ground sce0, hsv(0,0,.8), .3, .5
   
+  var hue = 0, k = 1/25, fres = 0f, refr_amt = 0f, ior = 1f
+  k = 1/25
+  mat.quick_solid hsv(0,0, .8), k, fres, refr_amt
+  sce0.pobjects->obj(sce0.pobjects->ub_obj).desc.mat_layer sce0.add_material(mat.refl, mat.refr, mat.em, ior), .5 ''layer strength
+  
  
   '                   num, brightness, size_min,    y, size_vari_mult
   create_lights sce0,   5,         30,     .010,  .35
@@ -87,7 +92,7 @@ sub Main
  
   var rad = .1, y=rad+.0
  
-  var hue = 4, k = 1/25, fres = 0f, refr_amt = 0f, ior = 1f
+  hue = 4: k = 1/25: fres = 0f: refr_amt = 0f: ior = 1f
   mat.quick_solid hsv(hue,.3, 1), k, fres, refr_amt
   sce0.add_sphere 0,y,0, rad, sce0.add_material(mat.refl, mat.refr, mat.em, ior)
   'sce0.pobjects->obj(sce0.pobjects->ub_obj).desc.mat_layer sce0.add_material(mat.refl, mat.refr, mat.em, ior), .5 ''layer strength
@@ -131,7 +136,7 @@ sub Main
       sce2.image_out x2, y2,,, true
       
       put (0,0), buf2.im, pset
-      draw string (x0, y), "hack:  k = rnd"
+      draw string (x0, y), "simple reflection"
       var matref = sce1.pobjects->obj(sce1.pobjects->ub_obj).desc.msv(0).id
       draw string (x1, y), "fresnel = " & str(sce1.pobjects->mat_(matref).o.refl.fresnel)
       draw string (x2, y), "k = " & str(mat.refl.k) & ", + new mat layer"
@@ -151,16 +156,4 @@ sub Main
  
 end sub
 
-
-dim as ushort oldcw, cwdouble=&h27F, cwsingle=&h7F
-   
-   asm
-      fstcw word ptr [oldcw]
-      fldcw word ptr [cwsingle] 'set FPU precision to single
-   end asm
-
 Main
-
-   asm
-'      fldcw word ptr [oldcw] 'restore control word
-   end asm
