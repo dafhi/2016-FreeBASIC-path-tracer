@@ -74,7 +74,7 @@ End Sub
 sub mat_random
   #define r rnd
   
-  var k = r*r, fresnel = r+.1, refr_amt = r: refr_amt=int(r+.78)'r*r
+  var k = r*r, fresnel = r+.1, refr_amt = r: refr_amt=flr(r+.78)'r*r
   mat.quick_solid hsv(r*6,r*r,.67*(.5+r)), k, fresnel, refr_amt
   ior = 1.05 + r*.67
 End Sub
@@ -255,10 +255,10 @@ sub Main
     t_info = t + update_mul / sc.pixel_size ^ 2
     
     var s = (FE - frame) / (FE - FS)
-    var pct = int((1-s)*100 + .5)
+    var pct = flr((1-s)*100 + .5)
     var mid_elem = (ubound(times)+1)\2, td = times(mid_elem)
     var time_remain = (frame_end-1)*s*td/3600
-    time_remain = int(time_remain * 100 + .5) / 100
+    time_remain = flr(time_remain * 100 + .5) / 100
     windowtitle "frame " & str(frame) & " ... " & str(pct) & "% .. " & str(tsum) & " render time"
     
   next
