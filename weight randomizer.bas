@@ -128,7 +128,7 @@ Function m(mul sng=1, b sng=.5) sng
 End Function
 
 sub new_weights(byref ev as eval_vars)
-  dim as single   time_spent_randomizing(14) = {1,1,5,1,0,0,5,1,1,1,2,2,1,5,5}
+  dim as single   time_spent_randomizing(14) = {1,1,5,1,1,1,5,1,1,1,2,2,1,5,5}
                                               
   norm_squash time_spent_randomizing()
   for i as integer = 0 to ubound(time_spent_randomizing) * .35
@@ -403,8 +403,8 @@ sub Main
             write #1, "qrate", b. parm1
             write #1, "imap fi", b. parm2
             write #1, "imap sus", b. parm3
-            write #1, "imap", b. parm4
-            write #1, "blur", b. parm5
+            write #1, "imap star filter", b. parm4
+            write #1, "blur star filter", b. parm5
             write #1, "blur fi", b. parm6
             write #1, "blur f0", b. parm7
             write #1, "grid fi", b. parm8

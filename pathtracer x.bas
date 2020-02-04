@@ -54,6 +54,9 @@ function rnd as double
   b += 1:  return a / culng(-1)
 End Function
 
+#undef int
+#define int as integer
+
 
 type myint              as integer
 
@@ -370,8 +373,8 @@ end property
 #define parm1 qrate       'initial sampling density
 #define parm2 imap_fi
 #define parm3 imap_sus
-#define parm4 imap
-#define parm5 blur
+#define parm4 imap_star_filter
+#define parm5 blur_star_filter
 #define parm6 blur_fi
 #define parm7 blur_f0
 #define parm8 grid_fi
@@ -952,23 +955,26 @@ sub tracer.trace_(ray as rt_ray ptr)
                         .mat->o.em.a * (.mat->o.em.col - .sum_em)'
       else
         
-        const iRoulette = 4
-        const chance_to_trace = 1 / iRoulette
+        const int iRoulette = 5
         
-        if rnd < chance_to_trace then
+        if rnd < 1 / iRoulette then
           
           .cosi = ray->d.dot(@.norm)
           .fresnel = clamp(1+.cosi)
           .sum_refl=type(0,0,0)
           .sum_refr=type(0,0,0)
           .sum_em = type(0,0,0)
-          for i as integer = 2 to iRoulette
+          
+          const int MULTI_TRACE = iRoulette - 1 '' less than iRoulette or you'll smoke the stack
+          
+          for i int = 1 to MULTI_TRACE
             trace ray
           Next
+          
           ray->radiance += (.sum_em + _
                           .mat->o.refl.a * (.sum_refl - .sum_em) + _
                           .mat->o.refr.a * (.sum_refr - .sum_em) + _
-                          .mat->o.em.a * (.mat->o.em.col*2 - .sum_em)) * iRoulette / (iRoulette-1)
+                          .mat->o.em.a * (.mat->o.em.col*2 - .sum_em)) * iRoulette / MULTI_TRACE
         endif
         
       EndIf
@@ -999,7 +1005,7 @@ end function
 sub tracer.delta_col(i as myint)
     if sce->a(i).clo = stack(0).closest then
       var col = sce->a(i).a.convert
-      var s = dcol( sce->a(i).colp, col )^.4
+      var s = dcol( sce->a(i).colp, col )'^.4
       if s > sce->imap_max then: sce->imap_max = s
       elseif s<>0 then
         if s < sce->imap_min then sce->imap_min = s
@@ -1022,9 +1028,9 @@ sub tracer.star_blur
     with *sce
       
       var div = ( (.frame - .blur_f0) / .blur_fi )
-      blur_fac = gEV.blur / div ^ gEV.blur_exp
+      blur_fac = gEV.blur_star_filter / div ^ gEV.blur_exp
       if blur_fac<0 then blur_fac=0': ? "blur fac <": sleep 10
-      if blur_fac>gEV.blur then blur_fac=gEV.blur': ? "blur fac >": sleep 10
+      if blur_fac>gEV.blur_star_filter then blur_fac=gEV.blur_star_filter': ? "blur fac >": sleep 10
       
       dim as myint  w=.ww, h=.hh, wm=w-1, hm=h-1, i
       
@@ -1066,7 +1072,7 @@ sub tracer.star_imap(des() as single, src() as single)
     with *sce
       
       dim as myint  w=.ww, h=.hh, wm=w-1, hm=h-1, i
-      blur_mul = gEV.imap
+      blur_mul = gEV.imap_star_filter
       for y as myint = 0 to hm
         var yw = y*w
         for x as myint = 0 to wm
